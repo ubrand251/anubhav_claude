@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAP Database Design</title>
+<style>
+  :root {
+    --primary: #1e3a8a;
+    --secondary: #3b82f6;
+    --accent: #f59e0b;
+    --text: #0f172a;
+    --muted: #475569;
+    --card: #ffffff;
+    --line: #cbd5e1;
+    --shadow: 0 4px 12px rgba(0,0,0,0.1);
+    --c-code: #dbeafe;  --c-code-b: #3b82f6;
+    --c-main: #dcfce7;  --c-main-b: #16a34a;
+    --c-supp: #fef9c3;  --c-supp-b: #ca8a04;
+    --c-user: #ede9fe;  --c-user-b: #7c3aed;
+    --c-sap:  #f1f5f9;  --c-sap-b:  #64748b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    width: 1920px;
+    min-height: 1280px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: var(--text);
+    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    position: relative;
+    padding: 40px 60px 0;
+  }
+  .ribbon {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: 4px;
+    font-size: 16px;
+    padding: 6px 18px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+  }
+  h1 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--primary);
+  }
+  .subtitle {
+    margin: 6px 0 0;
+    font-size: 28px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .divider {
+    height: 4px;
+    margin: 28px 0 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary) 60%, var(--accent));
+  }
+
+  /* ---------- Top-right brand badge ---------- */
+  .badge {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    text-align: right;
+    padding: 18px 28px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border: 2px solid var(--secondary);
+    box-shadow: var(--shadow);
+    color: var(--primary);
+  }
+  .badge .b-main {
+    font-size: 32px;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(30,58,138,0.18);
+  }
+  .badge .b-sub {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-top: 2px;
+  }
+
+  /* ---------- Main layout ---------- */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    padding: 32px 60px 40px;
+  }
+  .diagram-card {
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .diagram-card .mermaid { width: 100%; margin: 0; }
+  .diagram-card svg { width: 100% !important; max-width: none !important; height: auto; }
+  .diagram-card svg .er.entityLabel, .diagram-card svg .label { font-size: 18px; }
+  aside { display: flex; flex-direction: column; gap: 24px; }
+  .panel {
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+  }
+  .panel h2 {
+    margin: 0 0 14px;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary);
+  }
+
+  /* Stats */
+  .stats { background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; color: #fff; }
+  .stats h2 { color: #fff; }
+  .stat { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 18px; }
+  .stat:last-child { border-bottom: none; }
+  .stat b { font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .stat .date { font-size: 18px; font-weight: 700; }
+  .stat small { display: block; opacity: 0.8; font-size: 13px; }
+
+  /* Legend */
+  .lg-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; font-size: 17px; }
+  .sw { width: 30px; height: 22px; border-radius: 8px; border: 2px solid; flex: none; }
+  .tag { flex: none; min-width: 46px; text-align: center; font-weight: 800; font-size: 14px; padding: 3px 8px; border-radius: 8px; background: #f1f5f9; border: 1px solid var(--line); }
+  .ln { flex: none; width: 54px; height: 0; border-top: 3px solid var(--text); }
+  .ln.dash { border-top-style: dashed; }
+  .lg-note { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+
+  /* ---------- Footer banner ---------- */
+  footer {
+    height: 120px;
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  footer::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 14px, transparent 14px 28px);
+  }
+  footer::after {   /* bookmark notch */
+    content: "";
+    position: absolute; top: 0; left: 60px;
+    border-left: 28px solid var(--accent);
+    border-right: 28px solid var(--accent);
+    border-bottom: 18px solid transparent;
+    height: 70px;
+  }
+  .f-icons { font-size: 40px; position: relative; }
+  .f-text { text-align: center; position: relative; }
+  .f-main { font-size: 36px; font-weight: 800; letter-spacing: 3px; }
+  .f-sub { font-size: 22px; opacity: 0.9; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="ribbon">▶ TUTORIAL</div>
+  <h1>VACATION &amp; TRAVELLER MANAGEMENT</h1>
+  <p class="subtitle">SAP CAP Database Design · namespace <code>anubhav.claude</code></p>
+  <div class="badge">
+    <div class="b-main">🎬 Anubhav Trainings</div>
+    <div class="b-sub">Claude Tutorials</div>
+  </div>
+  <div class="divider"></div>
+</header>
+
+<main>
+  <section class="diagram-card">
+    <pre class="mermaid" id="er">
+erDiagram
+    TRAVELLERS ||--o{ CONTACTS : "contacts"
+    TRAVELLERS ||--o{ VACATIONS : "vacations"
+    TRAVELLERS ||--o| DESTINATIONS : "address"
+    DESTINATIONS }o..o| TRAVELLERS : "traveller"
+    TRAVELLERS }o..o| TRAVELLER_STATUS : "status"
+    CONTACTS }o..o| ADDRESS_TYPES : "type"
+    VACATIONS }o..o| CURRENCIES : "currency"
+    APP_USERS }o..o| ROLES : "role"
+    APP_USERS }o..o| TRAVELLERS : "traveller"
+
+    TRAVELLERS {
+        UUID ID PK
+        String(255) userName "* mandatory"
+        String(255) firstName
+        String(255) lastName
+        String(10) gender
+        Integer age
+        String(1) status_code FK "default A"
+        UUID address_ID FK
+        Timestamp createdAt
+        String(40) createdBy
+        Timestamp modifiedAt "ETag"
+        String(255) modifiedBy
+    }
+    VACATIONS {
+        UUID ID PK
+        String(255) name
+        Decimal(10-2) budget
+        String(3) currency_code FK
+        String(1024) description
+        DateTime startsAt
+        DateTime endsAt
+        UUID traveller_ID FK
+    }
+    CONTACTS {
+        UUID ID PK
+        String(1) type_code FK
+        String(255) address
+        UUID traveller_ID FK
+    }
+    DESTINATIONS {
+        UUID ID PK
+        String(255) address
+        String(40) city
+        String(8) postalCode
+        String(40) country
+        UUID traveller_ID FK
+    }
+    APP_USERS {
+        UUID ID PK
+        String(100) userName "* mandatory"
+        String(255) email "* mandatory"
+        String(255) fullName
+        String(10) role_code FK
+        Boolean isActive "default true"
+        DateTime lastLoginAt
+        UUID traveller_ID FK
+        Timestamp createdAt
+        String(255) createdBy
+        Timestamp modifiedAt
+        String(255) modifiedBy
+    }
+    TRAVELLER_STATUS {
+        String(1) code PK
+        String(255) name
+        String(1000) descr
+    }
+    ADDRESS_TYPES {
+        String(1) code PK
+        String(255) name
+        String(1000) descr
+    }
+    ROLES {
+        String(10) code PK
+        String(255) name
+        String(1000) descr
+    }
+    CURRENCIES {
+        String(3) code PK
+        String(255) name
+        String(5) symbol
+    }
+    </pre>
+  </section>
+
+  <aside>
+    <div class="panel stats">
+      <h2>📊 Model Statistics</h2>
+      <div class="stat"><span>Total Entities<small>+ sap.common.Currencies</small></span><b>8</b></div>
+      <div class="stat"><span>Code Lists</span><b>3</b></div>
+      <div class="stat"><span>Total Fields<small>database columns</small></span><b>51</b></div>
+      <div class="stat"><span>Relationships</span><b>9</b></div>
+      <div class="stat"><span>Generated</span><span class="date">19 Nov 2026</span></div>
+    </div>
+
+    <div class="panel">
+      <h2>Entity Types</h2>
+      <div class="lg-row"><span class="sw" style="background:var(--c-main);border-color:var(--c-main-b)"></span>Main entities</div>
+      <div class="lg-row"><span class="sw" style="background:var(--c-supp);border-color:var(--c-supp-b)"></span>Supporting entities</div>
+      <div class="lg-row"><span class="sw" style="background:var(--c-user);border-color:var(--c-user-b)"></span>User management</div>
+      <div class="lg-row"><span class="sw" style="background:var(--c-code);border-color:var(--c-code-b)"></span>Code lists (common.cds)</div>
+      <div class="lg-row"><span class="sw" style="background:var(--c-sap);border-color:var(--c-sap-b)"></span>SAP standard (@sap/cds/common)</div>
+    </div>
+
+    <div class="panel">
+      <h2>Symbols</h2>
+      <div class="lg-row"><span class="tag">PK</span>Primary key</div>
+      <div class="lg-row"><span class="tag">FK</span>Foreign key (managed association)</div>
+      <div class="lg-row"><span class="tag">*</span>Mandatory (@mandatory)</div>
+      <p class="lg-note">All fields carry an i18n <code>@title</code> label (en / de).</p>
+    </div>
+
+    <div class="panel">
+      <h2>Relationships</h2>
+      <div class="lg-row"><span class="ln"></span>Composition (owned child)</div>
+      <div class="lg-row"><span class="ln dash"></span>Association (reference)</div>
+      <div class="lg-row"><span class="tag">||–o{</span>one to many</div>
+      <div class="lg-row"><span class="tag">}o–o|</span>many to zero-or-one</div>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <div class="f-icons">📚 🎓</div>
+  <div class="f-text">
+    <div class="f-main">ANUBHAV TRAININGS — CLAUDE TUTORIALS</div>
+    <div class="f-sub">SAP CAP Database Design Tutorial Series</div>
+  </div>
+  <div class="f-icons">▶️</div>
+</footer>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';
+
+  // Entity → category colours
+  const CAT = {
+    TRAVELLERS: 'main', VACATIONS: 'main',
+    CONTACTS: 'supp', DESTINATIONS: 'supp',
+    APP_USERS: 'user',
+    TRAVELLER_STATUS: 'code', ADDRESS_TYPES: 'code', ROLES: 'code',
+    CURRENCIES: 'sap'
+  };
+
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      fontFamily: "'Segoe UI', Arial, sans-serif",
+      fontSize: '18px',
+      primaryColor: '#ffffff',
+      primaryBorderColor: '#1e3a8a',
+      lineColor: '#334155',
+      tertiaryColor: '#ffffff'
+    },
+    er: { fontSize: 18, useMaxWidth: false, entityPadding: 18, layoutDirection: 'LR' }
+  });
+
+  try {
+    await mermaid.run({ querySelector: '#er' });
+    const css = getComputedStyle(document.documentElement);
+    document.querySelectorAll('#er svg g[id*="entity-"]').forEach(g => {
+      // Mermaid strips underscores from ids (APP_USERS -> APPUSERS)
+      const name = Object.keys(CAT)
+                     .find(n => g.id.startsWith('entity-' + n.replace(/_/g, '') + '-'));
+      if (!name) return;
+      const c = CAT[name];
+      const fill = css.getPropertyValue('--c-' + c).trim();
+      const border = css.getPropertyValue('--c-' + c + '-b').trim();
+      g.querySelectorAll('path, rect, polygon').forEach((s, i) => {
+        s.style.stroke = border;
+        s.style.strokeWidth = '2px';
+        if (i === 0 || s.closest('.label-container')) s.style.fill = fill;
+      });
+      // Entity title = first text node in the group → bold, 20px (22px overflows narrow code-list boxes)
+      const title = g.querySelector('.label text, .label span, text');
+      if (title) { title.style.fontWeight = '700'; title.style.fontSize = '20px'; }
+      g.dataset.cat = c;
+    });
+    document.body.dataset.rendered = 'ok';
+  } catch (e) {
+    document.body.dataset.rendered = 'error: ' + e.message;
+  }
+</script>
+</body>
+</html>

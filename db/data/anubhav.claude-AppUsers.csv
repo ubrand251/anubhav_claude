@@ -1,0 +1,13 @@
+ID;userName;email;fullName;role_code;isActive;lastLoginAt;traveller_ID;createdBy;createdAt;modifiedAt
+b1000000-0000-4000-8000-000000000001;anita.desai;anita.desai@travelhub.com;Anita Desai;ADMIN;true;2026-11-19T08:12:00Z;;system@travelhub.com;2025-11-01T09:00:00Z;2026-11-19T08:12:00Z
+b1000000-0000-4000-8000-000000000002;robert.klein;robert.klein@travelhub.com;Robert Klein;ADMIN;true;2026-11-18T17:45:00Z;;system@travelhub.com;2025-11-01T09:05:00Z;2026-11-18T17:45:00Z
+b1000000-0000-4000-8000-000000000003;carlos.mendes;carlos.mendes@travelhub.com;Carlos Mendes;AGENT;true;2026-11-19T07:30:00Z;;anita.desai@travelhub.com;2025-12-10T10:20:00Z;2026-11-19T07:30:00Z
+b1000000-0000-4000-8000-000000000004;aiko.suzuki;aiko.suzuki@travelhub.com;Aiko Suzuki;AGENT;true;2026-11-17T23:10:00Z;;anita.desai@travelhub.com;2026-01-05T08:40:00Z;2026-11-17T23:10:00Z
+b1000000-0000-4000-8000-000000000005;fatima.alsayed;fatima.alsayed@travelhub.com;Fatima Al-Sayed;AGENT;false;2026-08-29T12:05:00Z;;robert.klein@travelhub.com;2026-02-15T11:15:00Z;2026-09-01T09:00:00Z
+b1000000-0000-4000-8000-000000000006;priya.sharma;priya.sharma@gmail.com;Priya Sharma;TRAVELLER;true;2026-11-16T19:22:00Z;a1000000-0000-4000-8000-000000000001;anita.desai@travelhub.com;2026-01-12T09:20:00Z;2026-11-16T19:22:00Z
+b1000000-0000-4000-8000-000000000007;james.miller;james.miller@millerconsulting.com;James Miller;TRAVELLER;true;2026-11-14T13:05:00Z;a1000000-0000-4000-8000-000000000002;anita.desai@travelhub.com;2026-01-20T11:35:00Z;2026-11-14T13:05:00Z
+b1000000-0000-4000-8000-000000000008;sophie.laurent;sophie.laurent@orange.fr;Sophie Laurent;TRAVELLER;true;2026-11-10T09:48:00Z;a1000000-0000-4000-8000-000000000003;carlos.mendes@travelhub.com;2026-02-03T10:10:00Z;2026-11-10T09:48:00Z
+b1000000-0000-4000-8000-000000000009;kenji.tanaka;k.tanaka@tanaka-trading.co.jp;Kenji Tanaka;TRAVELLER;true;2026-11-18T02:30:00Z;a1000000-0000-4000-8000-000000000004;aiko.suzuki@travelhub.com;2026-02-14T07:45:00Z;2026-11-18T02:30:00Z
+b1000000-0000-4000-8000-000000000010;arjun.mehta;arjun.mehta@outlook.com;Arjun Mehta;TRAVELLER;false;2026-07-14T11:55:00Z;a1000000-0000-4000-8000-000000000005;anita.desai@travelhub.com;2026-03-01T13:30:00Z;2026-07-14T12:00:00Z
+b1000000-0000-4000-8000-000000000011;emily.johnson;emily.j@yahoo.com;Emily Johnson;TRAVELLER;true;2026-11-12T21:40:00Z;a1000000-0000-4000-8000-000000000006;carlos.mendes@travelhub.com;2026-03-22T15:55:00Z;2026-11-12T21:40:00Z
+b1000000-0000-4000-8000-000000000012;mei.chen;mei.chen@shanghaidesign.cn;Mei Chen;TRAVELLER;true;2026-11-15T04:15:00Z;a1000000-0000-4000-8000-000000000008;aiko.suzuki@travelhub.com;2026-05-17T12:50:00Z;2026-11-15T04:15:00Z

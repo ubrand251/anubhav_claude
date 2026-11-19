@@ -1,0 +1,11 @@
+ID;userName;firstName;lastName;gender;age;status_code;createdBy;createdAt;modifiedAt
+a1000000-0000-4000-8000-000000000001;priya.sharma;Priya;Sharma;Female;29;A;anita.desai@travelhub.com;2026-01-12T09:15:00Z;2026-10-02T14:20:00Z
+a1000000-0000-4000-8000-000000000002;james.miller;James;Miller;Male;45;A;anita.desai@travelhub.com;2026-01-20T11:30:00Z;2026-09-18T08:45:00Z
+a1000000-0000-4000-8000-000000000003;sophie.laurent;Sophie;Laurent;Female;34;A;carlos.mendes@travelhub.com;2026-02-03T10:05:00Z;2026-08-27T16:10:00Z
+a1000000-0000-4000-8000-000000000004;kenji.tanaka;Kenji;Tanaka;Male;52;A;aiko.suzuki@travelhub.com;2026-02-14T07:40:00Z;2026-11-05T09:30:00Z
+a1000000-0000-4000-8000-000000000005;arjun.mehta;Arjun;Mehta;Male;38;I;anita.desai@travelhub.com;2026-03-01T13:25:00Z;2026-07-14T12:00:00Z
+a1000000-0000-4000-8000-000000000006;emily.johnson;Emily;Johnson;Female;26;A;carlos.mendes@travelhub.com;2026-03-22T15:50:00Z;2026-10-21T10:15:00Z
+a1000000-0000-4000-8000-000000000007;lukas.schneider;Lukas;Schneider;Male;61;A;robert.klein@travelhub.com;2026-04-08T08:10:00Z;2026-11-10T17:35:00Z
+a1000000-0000-4000-8000-000000000008;mei.chen;Mei;Chen;Female;31;A;aiko.suzuki@travelhub.com;2026-05-17T12:45:00Z;2026-10-30T11:05:00Z
+a1000000-0000-4000-8000-000000000009;giulia.rossi;Giulia;Rossi;Female;23;I;carlos.mendes@travelhub.com;2026-06-02T09:55:00Z;2026-09-03T15:40:00Z
+a1000000-0000-4000-8000-000000000010;omar.hassan;Omar;Hassan;Male;47;A;robert.klein@travelhub.com;2026-06-25T14:20:00Z;2026-11-12T13:25:00Z

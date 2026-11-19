@@ -22,6 +22,5 @@ argument-hint: [optional commit message]
 
 6. Show me the final result with commit hash and push confirmation
 
-Generate the complete schema.cds file with proper syntax, indentation, 
-and SAP CAP best practices.
+# Generate the complete schema.cds file with proper syntax, indentation, and SAP CAP best practices.
 If there are merge conflicts during pull, STOP and ask me how to proceed.
